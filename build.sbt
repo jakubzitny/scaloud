@@ -13,5 +13,8 @@ libraryDependencies ++= Seq(
   anorm,
   cache,
   ws,
-  "ws.securesocial" %% "securesocial" % "master-SNAPSHOT"
+  "ws.securesocial" %% "securesocial" % "master-SNAPSHOT",
+  "org.almoehi" %% "reactive-docker" % "0.1-SNAPSHOT",
+  "com.github.tototoshi" %% "play-json4s-native" % "0.3.0",
+  "com.github.tototoshi" %% "play-json4s-test-native" % "0.3.0" % "test"
 )

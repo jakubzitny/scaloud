@@ -5,6 +5,7 @@
 # Home page
 GET     /                           @controllers.Application.index
 GET     /docker                     @controllers.Application.docker
+GET     /gitlab                     @controllers.Application.gitlab
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

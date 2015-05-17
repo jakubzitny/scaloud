@@ -1,3 +1,2 @@
-###Play Framework 2.3.x with SecureSocial template
+###Scala PaaS Cloud - run scala/play apps in cloud in few clicks
 
-Step by step instructions are provided in [filtercode.com](http://www.filtercode.com/play/play-scala-securesocial).

@@ -26,6 +26,7 @@
 
 package controllers
 
+import _root_.services.{GitLabService, DockerService}
 import play.api.Logger
 import play.api.mvc.{Action, RequestHeader}
 import securesocial.core._
@@ -39,7 +40,13 @@ class Application(override implicit val env: RuntimeEnvironment[DemoUser]) exten
   }
 
   def docker = SecuredAction { implicit request =>
+    new DockerService().test
     Ok(views.html.docker(request.user.main))
+  }
+
+  def gitlab = SecuredAction { implicit request =>
+    new GitLabService().test
+    Ok(views.html.gitlab())
   }
 
 }
