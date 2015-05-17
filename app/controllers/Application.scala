@@ -26,6 +26,7 @@
 
 package controllers
 
+import play.api.Logger
 import play.api.mvc.{Action, RequestHeader}
 import securesocial.core._
 import models.DemoUser
@@ -36,4 +37,9 @@ class Application(override implicit val env: RuntimeEnvironment[DemoUser]) exten
   def index = SecuredAction { implicit request =>
     Ok(views.html.index("Your new application is ready."))
   }
+
+  def docker = SecuredAction { implicit request =>
+    Ok(views.html.docker(request.user.main))
+  }
+
 }

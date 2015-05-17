@@ -34,6 +34,9 @@ import securesocial.core.services.{UserService, SaveMode}
 import models.DemoUser
 import org.joda.time.format.{DateTimeFormatter, DateTimeFormat}
 
+/**
+ * @see http://www.filtercode.com/play/play-scala-securesocial
+ */
 class DemoUserService extends UserService[DemoUser] {
   val logger = Logger("application.controllers.DemoUserService")
 
