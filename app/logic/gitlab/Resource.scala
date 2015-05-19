@@ -1,4 +1,4 @@
-package logic
+package logic.gitlab
 
 sealed trait Resource { def name: String }
 case object BRANCH extends Resource { val name = "Branch" }

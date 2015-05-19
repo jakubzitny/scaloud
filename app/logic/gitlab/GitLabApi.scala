@@ -1,17 +1,16 @@
-package logic
+package logic.gitlab
 
 import java.net.URL
 
-import _root_.models._
 import com.github.tototoshi.play2.json4s.native.Json4s
 import models._
+import org.json4s.JsonDSL._
 import org.json4s._
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.json.Json
 import play.api.libs.ws.{WS, WSResponse}
 import play.api.mvc._
-import org.json4s.JsonDSL._
 
 import scala.concurrent.Future
 
