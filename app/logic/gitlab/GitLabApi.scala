@@ -2,6 +2,7 @@ package logic.gitlab
 
 import java.net.URL
 
+import _root_.models.{User, GitlabSession, Project}
 import com.github.tototoshi.play2.json4s.native.Json4s
 import models._
 import org.json4s.JsonDSL._

@@ -27,10 +27,11 @@
 package controllers
 
 import _root_.services.{GitLabService, DockerService}
-import play.api.Logger
+import logic.AppManager
 import play.api.mvc.{Action, RequestHeader}
 import securesocial.core._
 import models.DemoUser
+import scala.util.{Failure, Success}
 
 
 class Application(override implicit val env: RuntimeEnvironment[DemoUser]) extends securesocial.core.SecureSocial[DemoUser] {
@@ -39,14 +40,25 @@ class Application(override implicit val env: RuntimeEnvironment[DemoUser]) exten
     Ok(views.html.index("Your new application is ready."))
   }
 
+  def create = SecuredAction.async { implicit request =>
+    AppManager.createProject.map { response =>
+      Ok(views.html.app(response._1.toString, response._2.toString))
+      //Ok(views.html.app(response:_*))
+      //Ok(views.html.app(response.productIterator.toSeq))
+    } recover {
+      case cause => Ok("fail " + cause)
+    }
+  }
+
   def docker = SecuredAction { implicit request =>
     new DockerService().test
     Ok(views.html.docker(request.user.main))
   }
 
-  def gitlab = SecuredAction { implicit request =>
-    new GitLabService().test
-    Ok(views.html.gitlab())
+  def gitlabTest = SecuredAction.async { request =>
+    GitLabService.getProjects.map { response =>
+      Ok(views.html.gitlab(response))
+    }
   }
 
 }
