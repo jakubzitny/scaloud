@@ -56,7 +56,7 @@ object GitLabService {
   def createProject(name: String) = {
     gitLabApi.createProject(name = name, public = Some(true)).map { response =>
       val project = formatProjectResponse(response.json.as[JsObject])
-      logger.info("createProject: " + project)
+      Logger.info("createProject: " + project)
       response.status match {
         case Status.CREATED => project
         case _ => throw new GitLabCreateException
@@ -76,7 +76,7 @@ object GitLabService {
    */
   def enableCi(project: GitLabProject, ciProject: GitLabCiProject) = {
     gitLabApi.enableServiceCi(project.id, ciProject.token, ciProject.projectUrl).map { response =>
-      logger.info("enableCi: " + response.body)
+      Logger.info("enableCi: " + response.body)
       response.status match {
         case Status.OK => response.body
         case _ => throw new GitLabEnableCiException
