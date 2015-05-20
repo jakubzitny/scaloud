@@ -1,14 +1,15 @@
 package services
 
+import exceptions._
 import logic.gitlab.GitLabApi
-import models.Project
+import models.{GitLabCiProject, GitLabProject, Project}
+import play.api.Logger
 import play.api.libs.json._
 import play.api.libs.ws.{WS, WSRequestHolder, WSResponse}
 import scala.concurrent.{ExecutionContext, Future}
 import scala.async.Async.{async, await}
 import scala.util.{Failure, Success}
-import org.json4s._
-import org.json4s.native.JsonMethods._
+import play.api.http._
 
 //import scala.concurrent.ExecutionContext.Implicits.global
 //import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -22,11 +23,13 @@ import play.api.libs.concurrent.Execution.Implicits
  */
 object GitLabService {
 
+  implicit val context = Implicits.defaultContext
+
   val GitLabUrl = "https://gitlab.com/api/v3/"
   val GitLabToken = "t-n4vX1mArhpvoumsj14"
-  val gitLabApi = new GitLabApi(GitLabUrl, GitLabToken)
 
-  implicit val context = Implicits.defaultContext
+  val gitLabApi = new GitLabApi(GitLabUrl, GitLabToken)
+  val logger = Logger(this.getClass.getSimpleName)
 
   /**
    * requests all projects on GitLab
@@ -44,35 +47,52 @@ object GitLabService {
 
   /**
    * creates project of given name on GitLab
-   * TODO: log stuff
+   *
+   * @see http://git.io/vTgW6#create-project
+   *
    * @param name the name of creating repo
    * @return Future with (name, project url) tuple or Exception
    */
   def createProject(name: String) = {
     gitLabApi.createProject(name = name, public = Some(true)).map { response =>
-      println(response.body)
+      val project = formatProjectResponse(response.json.as[JsObject])
+      logger.info("createProject: " + project)
       response.status match {
-        case 201 => formatProjectResponse(response.json.as[JsObject])
-        case _ => throw new Exception("failed")
+        case Status.CREATED => project
+        case _ => throw new GitLabCreateException
+      }
+    }
+  }
+
+  /**
+   * enables ci service on gitlab project
+   * links ci project with gitlab project
+   *
+   * @see http://git.io/vTgWN#edit-gitlab-ci-service
+   *
+   * @param project previously created GitLabProject
+   * @param ciProject previously created GitLabCiProject
+   * @return future with useless data
+   */
+  def enableCi(project: GitLabProject, ciProject: GitLabCiProject) = {
+    gitLabApi.enableServiceCi(project.id, ciProject.token, ciProject.projectUrl).map { response =>
+      logger.info("enableCi: " + response.body)
+      response.status match {
+        case Status.OK => response.body
+        case _ => throw new GitLabEnableCiException
       }
     }
   }
 
   /**
    * parse project name and ssh url to repo from project json
-   * TODO: make a GitLabProject class
+   *
    * @param projectJson json of created project
+   * @return GitLabProject data of created project
    */
-  private def formatProjectResponse(projectJson: JsObject): (String, String) = {
-    ((projectJson \ "name").as[String], (projectJson \ "ssh_url_to_repo").as[String])
+  private def formatProjectResponse(projectJson: JsObject): GitLabProject = {
+    new GitLabProject((projectJson \ "id").as[Long], (projectJson \ "name").as[String],
+      (projectJson \ "ssh_url_to_repo").as[String], (projectJson \ "name_with_namespace").as[String])
   }
-
-  /* TODO
-  private def formatProject(body: String): Project = {
-    val json = parse(body)
-    val project: Project = json.extract[Project]
-    println(project)
-    project
-  }*/
 
 }

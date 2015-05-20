@@ -26,32 +26,45 @@
 
 package controllers
 
-import _root_.services.{GitLabService, DockerService}
+import _root_.services.{GitLabCiService, GitLabService, DockerService}
+import com.github.tototoshi.play2.scalate._
 import logic.AppManager
+import logic.gitlab.GitLabCiApi
 import play.api.mvc.{Action, RequestHeader}
 import securesocial.core._
 import models.DemoUser
+import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
+/**
+ * base controller for whole project
+ *
+ * @author Jakub Zitny <zitnyjak@fit.cvut.cz>
+ * @since Thu May  7 00:51:31 CEST 2015
+ */
+class Application(override implicit val env: RuntimeEnvironment[DemoUser])
+  extends securesocial.core.SecureSocial[DemoUser] {
 
-class Application(override implicit val env: RuntimeEnvironment[DemoUser]) extends securesocial.core.SecureSocial[DemoUser] {
-
+  /**
+   * @return rendered index page
+   */
   def index = SecuredAction { implicit request =>
-    Ok(views.html.index("Your new application is ready."))
+    Ok(Scalate.render("index.jade", Map()))
   }
 
+  /**
+   * @return rendered create app page
+   */
   def create = SecuredAction.async { implicit request =>
     AppManager.createProject.map { response =>
-      Ok(views.html.app(response._1.toString, response._2.toString))
-      //Ok(views.html.app(response:_*))
-      //Ok(views.html.app(response.productIterator.toSeq))
+      Ok(views.html.app(response))
     } recover {
       case cause => Ok("fail " + cause)
     }
   }
 
   def docker = SecuredAction { implicit request =>
-    new DockerService().test
+    DockerService.test()
     Ok(views.html.docker(request.user.main))
   }
 
@@ -59,6 +72,14 @@ class Application(override implicit val env: RuntimeEnvironment[DemoUser]) exten
     GitLabService.getProjects.map { response =>
       Ok(views.html.gitlab(response))
     }
+  }
+
+  def futureTest = Action { request =>
+    //val s = DockerService.sshDeployCmd("https://gitlab.com/jakubzitny/scaloud_app_as84awuz.git")
+    //println(s)
+    //val s = GitLabCiService.createProject("testname3", 276883L, "jakubzitny/uxy3v3ei", "git@gitlab.com:jakubzitny/uxy3v3ei.git")
+    //val s = GitLabService.enableCi(278556, 2923, "62eb81c7c2168132e46a88ba01838b")
+    Ok(this.getClass.getSimpleName)
   }
 
 }

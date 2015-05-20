@@ -812,4 +812,10 @@ class GitLabApi(gitlabUrl: String, gitlabToken: String) extends Controller with 
   def removeGroupMember(groupId: Int, userId: Int): Future[WSResponse] = {
     WS.url(gitlabUrl + "/groups/" + groupId + "/members/" + userId).withHeaders(authToken).delete()
   }
+
+  def enableServiceCi(projectId: Long, token: String, projectUrl: String) = {
+    WS.url(gitlabUrl + "/projects/" + projectId + "/services/gitlab-ci").withHeaders(authToken).put(
+      ("token" -> token) ~ ("project_url" -> projectUrl)
+    )
+  }
 }

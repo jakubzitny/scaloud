@@ -1,10 +1,10 @@
-@(name: String, projectUrl: String)
+@(p: GitLabProject)
 
-<h1>App @name</h1>
+<h1>App @p.name</h1>
 
 <ol>
-    <li>clone the bootstrap repo: <i>git clone TODO</i><br/></li>
-    <li>change the origin to your app: <i>git remote set-url origin @projectUrl</i></li>
+    <li>clone the bootstrap repo: <i>git clone https://gitlab.com/jakubzitny/scaloud_bootstrap.git</i><br/></li>
+    <li>change the origin to your app: <i>git remote set-url origin @(p.sshUrlToRepo)</i></li>
     <li>make changes<br/></li>
     <li>push app changes to the cloud: <i>git push origin master</i></li>
     <li>relax!</li>

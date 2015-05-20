@@ -1,22 +1,29 @@
 package logic
 
-import services.GitLabService
+import services._
+import play.api.libs.concurrent.Execution._
 
 /**
- * Created by d_rc on 18/05/15.
+ * main logic class managing created apps
+ *
+ * @author Jakub Zitny <zitnyjak@fit.cvut.cz>
+ * @since Mon May 18 00:51:31 CEST 2015
  */
 object AppManager {
 
-  implicit val context = play.api.libs.concurrent.Execution.Implicits.defaultContext
+  implicit val context = Implicits.defaultContext
 
   def createProject = {
     val name = StringUtility.generateAppName()
-    // create in gl
-    GitLabService.createProject(name)
-    // enable ci integration
-    // prepare docker container
-    // save to db
-    // return
+    for {
+      // create in gl and glci
+      project <- GitLabService.createProject(name)
+      ciProject <- GitLabCiService.createProject(project)
+      success <- GitLabService.enableCi(project, ciProject)
+      // prepare docker container
+      docker <- DockerService.createContainer(project.name, project.sshUrlToRepo)
+      // save to db
+    } yield project
   }
 
 }
