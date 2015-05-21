@@ -12,6 +12,8 @@ dump
 .classpath
 .scala_dependencies
 bin
+*.swp
+*.swo
  
 # SBT
 dist
