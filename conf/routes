@@ -4,10 +4,13 @@
 
 # Home page
 GET         /                              @controllers.Application.index
+GET         /apps                          @controllers.Application.apps
 GET         /create                        @controllers.Application.create
 
 GET         /docker                        @controllers.Application.docker
-GET         /gitlab                        @controllers.Application.gitlabTest
+GET         /admin                         @controllers.Application.admin
+GET         /app/:id                       @controllers.Application.app(id)
+GET         /remove/:id                    @controllers.Application.gitLabRemove(id)
 GET         /ft                            @controllers.Application.futureTest
 
 # Map static resources from the /public folder to the /assets URL path

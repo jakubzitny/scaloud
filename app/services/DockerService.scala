@@ -6,7 +6,7 @@ import com.decodified.scalassh.SSH
 import com.kolor.docker.api._
 import com.kolor.docker.api.json.FormatsV112._
 import com.kolor.docker.api.entities._
-import play.Logger
+import play.api.Logger
 import scala.concurrent.duration.Duration
 import scala.concurrent.Await
 import play.api.libs.iteratee._
@@ -105,7 +105,7 @@ object DockerService {
           "git remote set-url origin " + appRepo + ";" +
           "git fetch origin;" +
           "git reset --hard origin/master\""
-    println("executing: " + cmd)
+    Logger.info("deploying: " + cmd)
     "ssh " + DockerHost + " " + cmd !!
   }
 

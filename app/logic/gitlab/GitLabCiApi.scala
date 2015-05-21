@@ -52,18 +52,18 @@ class GitLabCiApi(gitLabCiUrl: String, gitLabUrl: String, gitLabToken: String) e
    * ci api doc is old
    * @see http://git.io/vTgE5 for current version
    *
-   * @param name duh
-   * @param gitlabId duh
-   * @param gitlabPath duh
-   * @param sshUrlToRepo duh
+   * @param name name of "project" in gitlab ci
+   * @param gitlabId id of project in gitlab
+   * @param gitLabProjectUrl todo
+   * @param sshUrlToRepo ssh url of repo in gitlab
    * @return future with WSResponse data
    */
-  def createProject(name: String, gitlabId: String, gitlabPath: String, sshUrlToRepo: String) = {
+  def createProject(name: String, gitlabId: Long, gitLabProjectUrl: String, sshUrlToRepo: String) = {
     WS.url(gitLabCiUrl + "/projects" + uriSuffix).withHeaders(authToken).post(Extraction.decompose(
       CiProject(
         name,
         gitlabId,
-        gitlabPath,
+        gitLabProjectUrl,
         sshUrlToRepo
       )).underscoreKeys)
   }

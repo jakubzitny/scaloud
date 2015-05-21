@@ -1,0 +1,40 @@
+-@ val app: (String, String)
+
+html(lang="en")
+    head
+        title Scaloud - Apps
+        link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css')
+        link(rel='stylesheet' href='/assets/stylesheets/main.css')
+    body
+        .container#header(align="center")
+            h1.text-uppercase Scaloud
+            h5 Scala/Play apps PaaS deployment service
+        .container#menu(align="center")
+            a(class="btn btn-primary" href="/" role="button") Home
+            a(class="btn btn-primary" href="/apps" role="button") Apps
+            a(class="btn btn-primary" href="/create" role="button") New App
+            a(class="btn btn-primary" href="/admin" role="button") Administration
+        .container#content(align="center")
+            h2.text-uppercase Instructions for #{app._1}
+            .container
+                table.table.table-bordered
+                    tr
+                        td clone the bootstrap repo:
+                    tr
+                        td
+                            code git clone https://gitlab.com/jakubzitny/scaloud_bootstrap.git
+                    tr
+                        td change the origin to your app:
+                    tr
+                        td
+                            code git remote set-url origin #{app._2}
+                    tr
+                        td make changes
+                    tr
+                        td push app changes to the cloud:
+                    tr
+                        td
+                            code git push origin master
+                    tr
+                        td
+                            b relax!

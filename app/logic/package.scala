@@ -4,6 +4,7 @@
  */
 package object exceptions {
   class GitLabCreateException() extends Exception("GitLabCreate") { }
-  class GitLabCiCreateException() extends Exception("GitLabCiCreate") { }
   class GitLabEnableCiException() extends Exception("GitLabEnableCi") { }
+  class GitLabDeleteException() extends Exception("GitLabDelete") { }
+  class GitLabCiCreateException() extends Exception("GitLabCiCreate") { }
 }

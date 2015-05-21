@@ -37,8 +37,8 @@ object GitLabCiService {
    * @return wrapped future with actions after project is created
    */
   def createProject(project: GitLabProject) = {
-    gitLabCiApi.createProject(project.name, project.id.toString,
-        project.nameWithNameSpace, project.sshUrlToRepo).map { response =>
+    gitLabCiApi.createProject(project.nameWithNameSpace, project.id,
+        project.pathWithNameSpace, project.sshUrlToRepo).map { response =>
       val ciProject = formatProjectResponse(response.json.as[JsObject])
       Logger.info("createCiProject: " + ciProject)
       response.status match {

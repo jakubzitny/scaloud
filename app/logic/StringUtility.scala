@@ -12,7 +12,7 @@ import scala.annotation.tailrec
 object StringUtility {
 
   val RandomStringDefaultLength = 6
-  val AppNamePrefix = "scaloud_"
+  val AppNamePrefix = "scaloud_app"
 
   /**
    * @see http://goo.gl/fTTCyp

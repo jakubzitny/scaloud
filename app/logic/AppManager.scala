@@ -26,4 +26,10 @@ object AppManager {
     } yield project
   }
 
+  def deleteProject(id: Long) = {
+    for {
+      gl <- GitLabService.deleteProject(id)
+    } yield gl
+  }
+
 }

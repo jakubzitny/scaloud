@@ -36,12 +36,20 @@ object GitLabService {
    * the response from api has json array of projects
    *  - convert the json array to List of JsObjects
    *  - map only "id" from each project as Int
+   *
    * @return Future with List of all project IDs
    */
   def getProjects = {
     gitLabApi.getProjects().map { response =>
       val projects = response.json.as[List[JsObject]]
-      projects.map(p => (p \ "id").as[Int])
+      projects.map(p => formatProjectResponse(p))
+    }
+  }
+
+  def getProject(id: Long) = {
+    gitLabApi.getProject(id.toInt).map { response =>
+      val project = response.json.as[JsObject]
+      formatProjectResponse(project)
     }
   }
 
@@ -84,6 +92,16 @@ object GitLabService {
     }
   }
 
+  def deleteProject(id: Long) = {
+    gitLabApi.deleteProject(id.toInt).map { response =>
+      Logger.info("deleteProject: " + response.body)
+      response.status match {
+        case Status.OK => response.body
+        case _ => throw new GitLabDeleteException
+      }
+    }
+  }
+
   /**
    * parse project name and ssh url to repo from project json
    *
@@ -92,7 +110,9 @@ object GitLabService {
    */
   private def formatProjectResponse(projectJson: JsObject): GitLabProject = {
     new GitLabProject((projectJson \ "id").as[Long], (projectJson \ "name").as[String],
-      (projectJson \ "ssh_url_to_repo").as[String], (projectJson \ "name_with_namespace").as[String])
+      (projectJson \ "ssh_url_to_repo").as[String], (projectJson \ "http_url_to_repo").as[String],
+      (projectJson \ "name_with_namespace").as[String], (projectJson \ "path_with_namespace").as[String],
+      (projectJson \ "web_url").as[String])
   }
 
 }
