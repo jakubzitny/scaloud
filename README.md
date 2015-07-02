@@ -10,3 +10,4 @@
 
 ## inspiration
 - scala-gitlab-api (gitlab api client)
+- project bootrstrapped from Alejandro Barros Cuetos's template
