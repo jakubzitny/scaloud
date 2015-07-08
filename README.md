@@ -1,5 +1,6 @@
 ###Scala PaaS Cloud - run scala/play apps in cloud in few clicks
 
+- partially working demo at http://scaloud.herokuapp.com
 
 ## libs
 - play (web framework)
